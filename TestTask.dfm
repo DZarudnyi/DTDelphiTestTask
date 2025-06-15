@@ -75,13 +75,6 @@ object MainForm: TMainForm
           Height = 23
           TabOrder = 1
         end
-        object edtPhoneNumber: TEdit
-          Left = 23
-          Top = 101
-          Width = 121
-          Height = 23
-          TabOrder = 2
-        end
         object edtEmail: TEdit
           Left = 199
           Top = 101
@@ -90,7 +83,7 @@ object MainForm: TMainForm
           TabOrder = 3
         end
         object btnSave: TButton
-          Left = 135
+          Left = 23
           Top = 144
           Width = 75
           Height = 25
@@ -98,14 +91,35 @@ object MainForm: TMainForm
           TabOrder = 4
           OnClick = btnSaveClick
         end
+        object btnDelete: TButton
+          Left = 235
+          Top = 144
+          Width = 85
+          Height = 25
+          Caption = 'Delete'
+          Enabled = False
+          TabOrder = 5
+          OnClick = btnDeleteClick
+        end
+        object mEdPhoneNumber: TMaskEdit
+          Left = 23
+          Top = 101
+          Width = 121
+          Height = 23
+          EditMask = '!\(999\)000-0000;1;_'
+          MaxLength = 13
+          TabOrder = 2
+          Text = '(   )   -    '
+        end
       end
       object btnSaveFile: TButton
-        Left = 32
+        Left = 24
         Top = 232
         Width = 75
         Height = 25
         Caption = 'Save to File'
         TabOrder = 1
+        OnClick = btnSaveFileClick
       end
       object btnLoadFile: TButton
         Left = 224
@@ -124,40 +138,20 @@ object MainForm: TMainForm
       Height = 525
       Align = alClient
       TabOrder = 1
-      object gbControls: TGroupBox
+      object gbBottom: TGroupBox
         Left = 1
-        Top = 448
+        Top = 496
         Width = 461
-        Height = 76
+        Height = 28
         Align = alBottom
         ShowFrame = False
         TabOrder = 0
-        object btnUpdate: TButton
-          Left = 2
-          Top = 17
-          Width = 111
-          Height = 57
-          Align = alLeft
-          Caption = 'Update'
-          Enabled = False
-          TabOrder = 0
-        end
-        object btnDelete: TButton
-          Left = 348
-          Top = 17
-          Width = 111
-          Height = 57
-          Align = alRight
-          Caption = 'Delete'
-          Enabled = False
-          TabOrder = 1
-        end
       end
       object lvTable: TListView
         Left = 1
         Top = 1
         Width = 461
-        Height = 447
+        Height = 495
         Align = alClient
         Columns = <
           item

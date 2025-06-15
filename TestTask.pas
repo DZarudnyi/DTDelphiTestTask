@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Grids, ShellAPI, ShlObj,
-  Vcl.ComCtrls, Vcl.ExtDlgs;
+  Vcl.ComCtrls, Vcl.ExtDlgs, Vcl.Mask;
 
 type
   TMainForm = class(TForm)
@@ -17,18 +17,17 @@ type
     edtFirstName: TEdit;
     edtLastName: TEdit;
     lblPhoneNumber: TLabel;
-    edtPhoneNumber: TEdit;
     lblEmail: TLabel;
     edtEmail: TEdit;
     btnSave: TButton;
     Panel1: TPanel;
-    gbControls: TGroupBox;
-    btnUpdate: TButton;
-    btnDelete: TButton;
+    gbBottom: TGroupBox;
     btnSaveFile: TButton;
     btnLoadFile: TButton;
     lvTable: TListView;
     OpenTxtDlg: TOpenTextFileDialog;
+    btnDelete: TButton;
+    mEdPhoneNumber: TMaskEdit;
     procedure btnLoadFileClick(Sender: TObject);
     procedure FillListView(line: string);
     function OpenFolderAndSelectFile(const FileName: string): boolean;
@@ -36,6 +35,8 @@ type
     procedure lvTableSelectItem(Sender: TObject; Item: TListItem;
       Selected: Boolean);
     procedure OpenApplicationFileFolder(FullPath: String);
+    procedure btnDeleteClick(Sender: TObject);
+    procedure btnSaveFileClick(Sender: TObject);
 
   private
 
@@ -49,6 +50,11 @@ var
 implementation
 
 {$R *.dfm}
+
+procedure TMainForm.btnDeleteClick(Sender: TObject);
+begin
+  lvTable.Items[lvTable.ItemIndex].Delete;
+end;
 
 procedure TMainForm.btnLoadFileClick(Sender: TObject);
 var
@@ -93,10 +99,41 @@ procedure TMainForm.btnSaveClick(Sender: TObject);
 begin
   if (edtFirstName.Text = '') or (edtLastName.Text = '') then
     raise Exception.Create('First and Last name must not be empty!');
-  FillListView(edtFirstName.Text
-                + ' ' + edtLastName.Text
-                + ' ' + edtPhoneNumber.Text
-                + ' ' + edtEmail.Text);
+  if (lvTable.ItemIndex <> -1) then
+  begin
+    with lvTable.Items[lvTable.ItemIndex] do
+    begin
+      Caption := edtFirstName.Text + ' ' + edtLastName.Text;
+      SubItems[0] := mEdPhoneNumber.Text;
+      SubItems[1] := edtEmail.Text;
+    end;
+  end
+  else
+  begin
+    FillListView(edtFirstName.Text
+                  + ' ' + edtLastName.Text
+                  + ' ' + mEdPhoneNumber.Text
+                  + ' ' + edtEmail.Text);
+  end;
+end;
+
+procedure TMainForm.btnSaveFileClick(Sender: TObject);
+var
+  output : TStreamWriter;
+  i: Integer;
+begin
+  output := TStreamWriter.Create('FullContactsList.txt', false, TEncoding.UTF8);
+  try
+    for i := 0 to lvTable.Items.Count - 1 do
+    begin
+      with lvTable.Items[i] do
+      begin
+        output.WriteLine(Caption + ' ' + SubItems[0] + ' ' + SubItems[1]);
+      end;
+    end;
+  finally
+    output.Free;
+  end;
 end;
 
 procedure TMainForm.FillListView(line: string);
@@ -115,16 +152,28 @@ end;
 
 procedure TMainForm.lvTableSelectItem(Sender: TObject; Item: TListItem;
   Selected: Boolean);
+var
+  captionSplit : TArray<string>;
 begin
   if Item.Selected then
   begin
     btnDelete.Enabled := true;
-    btnUpdate.Enabled := true;
+    with lvTable.Items[lvTable.ItemIndex] do
+    begin
+      captionSplit := Caption.Split([' ']);
+      edtFirstName.Text := captionSplit[0];
+      edtLastName.Text := captionSplit[1];
+      mEdPhoneNumber.EditText := SubItems[0];
+      edtEmail.Text := SubItems[1];
+    end;
   end
   else
   begin
     btnDelete.Enabled := false;
-    btnUpdate.Enabled := false;
+    edtFirstName.Clear;
+    edtLastName.Clear;
+    mEdPhoneNumber.Clear;
+    edtEmail.Clear;
   end;
 end;
 
