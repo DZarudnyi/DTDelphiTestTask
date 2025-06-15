@@ -139,7 +139,6 @@ object MainForm: TMainForm
           Height = 57
           Align = alLeft
           Caption = 'Update'
-          Enabled = False
           TabOrder = 0
         end
         object btnDelete: TButton
@@ -149,7 +148,6 @@ object MainForm: TMainForm
           Height = 57
           Align = alRight
           Caption = 'Delete'
-          Enabled = False
           TabOrder = 1
         end
       end
@@ -177,12 +175,7 @@ object MainForm: TMainForm
             Caption = 'Email'
           end>
         TabOrder = 1
-        OnSelectItem = lvTableSelectItem
       end
     end
-  end
-  object OpenTxtDlg: TOpenTextFileDialog
-    Left = 744
-    Top = 273
   end
 end

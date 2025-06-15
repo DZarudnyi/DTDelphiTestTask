@@ -60,6 +60,7 @@ var
   EncIndex : Integer;
   LLineText: TArray<string>;
 begin
+  //ShellExecute(0, nil, 'explorer.exe', '/select,C:\WINDOWS\explorer.exe', nil, SW_SHOWNORMAL);
   if OpenTxtDlg.Execute(Self.Handle) then
   begin
     fileLocation := OpenTxtDlg.FileName;
@@ -68,24 +69,26 @@ begin
 
     if FileExists(fileLocation) then
     begin
-      //OpenApplicationFileFolder(fileLocation);
-      stream := TFileStream.Create(fileLocation, fmOpenRead or fmShareDenyNone);
-      reader := TStreamReader.Create(stream);
-      try
-        reader := TStreamReader.Create(stream, TEncoding.Default);
-        while not reader.EndOfStream do
-        begin
-          FillListView(reader.ReadLine);
-        end;
-        reader.Free;
-      finally
-        stream.Free;
-      end;
+      OpenApplicationFileFolder(fileLocation);
     end
     else
     begin
       raise Exception.Create('File does not exist.');
     end;
+  end;
+
+  OpenFolderAndSelectFile(fileLocation);
+  stream := TFileStream.Create(fileLocation, fmOpenRead or fmShareDenyNone);
+  reader := TStreamReader.Create(stream);
+  try
+    reader := TStreamReader.Create(stream, TEncoding.Default);
+    while not reader.EndOfStream do
+    begin
+      FillListView(reader.ReadLine);
+    end;
+    reader.Free;
+  finally
+    stream.Free;
   end;
 end;
 
@@ -145,6 +148,9 @@ end;
 procedure TMainForm.OpenApplicationFileFolder(FullPath: String);
 begin
      ShellExecute(Application.Handle, PChar('open'), PChar(FullPath), nil, nil, SW_SHOWNORMAL);
+     //references
+     //https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecutea
+     //https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindow
 end;
 
 end.

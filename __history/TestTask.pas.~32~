@@ -60,6 +60,7 @@ var
   EncIndex : Integer;
   LLineText: TArray<string>;
 begin
+  //ShellExecute(0, nil, 'explorer.exe', '/select,C:\WINDOWS\explorer.exe', nil, SW_SHOWNORMAL);
   if OpenTxtDlg.Execute(Self.Handle) then
   begin
     fileLocation := OpenTxtDlg.FileName;

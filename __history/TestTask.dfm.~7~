@@ -33,6 +33,7 @@ object MainForm: TMainForm
         Align = alTop
         Caption = 'Contact information'
         TabOrder = 0
+        ExplicitWidth = 424
         object lblFirstName: TLabel
           Left = 23
           Top = 24
@@ -96,10 +97,9 @@ object MainForm: TMainForm
           Height = 25
           Caption = 'Save'
           TabOrder = 4
-          OnClick = btnSaveClick
         end
       end
-      object btnSaveFile: TButton
+      object Button3: TButton
         Left = 32
         Top = 232
         Width = 75
@@ -107,14 +107,13 @@ object MainForm: TMainForm
         Caption = 'Save to File'
         TabOrder = 1
       end
-      object btnLoadFile: TButton
+      object Button4: TButton
         Left = 224
         Top = 232
         Width = 97
         Height = 25
         Caption = 'Load from File'
         TabOrder = 2
-        OnClick = btnLoadFileClick
       end
     end
     object Panel1: TPanel
@@ -124,6 +123,18 @@ object MainForm: TMainForm
       Height = 525
       Align = alClient
       TabOrder = 1
+      ExplicitLeft = -4
+      ExplicitWidth = 372
+      object sgrContacts: TStringGrid
+        Left = 1
+        Top = 1
+        Width = 461
+        Height = 447
+        Align = alClient
+        TabOrder = 0
+        ExplicitWidth = 370
+        ExplicitHeight = 448
+      end
       object gbControls: TGroupBox
         Left = 1
         Top = 448
@@ -131,7 +142,8 @@ object MainForm: TMainForm
         Height = 76
         Align = alBottom
         ShowFrame = False
-        TabOrder = 0
+        TabOrder = 1
+        ExplicitWidth = 370
         object btnUpdate: TButton
           Left = 2
           Top = 17
@@ -139,8 +151,9 @@ object MainForm: TMainForm
           Height = 57
           Align = alLeft
           Caption = 'Update'
-          Enabled = False
           TabOrder = 0
+          ExplicitTop = 6
+          ExplicitHeight = 68
         end
         object btnDelete: TButton
           Left = 348
@@ -149,40 +162,11 @@ object MainForm: TMainForm
           Height = 57
           Align = alRight
           Caption = 'Delete'
-          Enabled = False
           TabOrder = 1
+          ExplicitLeft = 192
+          ExplicitTop = 19
         end
       end
-      object lvTable: TListView
-        Left = 1
-        Top = 1
-        Width = 461
-        Height = 447
-        Align = alClient
-        Columns = <
-          item
-            AutoSize = True
-            Caption = 'First name'
-          end
-          item
-            AutoSize = True
-            Caption = 'Last name'
-          end
-          item
-            AutoSize = True
-            Caption = 'Phone'
-          end
-          item
-            AutoSize = True
-            Caption = 'Email'
-          end>
-        TabOrder = 1
-        OnSelectItem = lvTableSelectItem
-      end
     end
-  end
-  object OpenTxtDlg: TOpenTextFileDialog
-    Left = 744
-    Top = 273
   end
 end

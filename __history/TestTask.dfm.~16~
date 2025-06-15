@@ -181,8 +181,4 @@ object MainForm: TMainForm
       end
     end
   end
-  object OpenTxtDlg: TOpenTextFileDialog
-    Left = 744
-    Top = 273
-  end
 end

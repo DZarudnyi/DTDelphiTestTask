@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Grids, ShellAPI, ShlObj,
-  Vcl.ComCtrls, Vcl.ExtDlgs;
+  Vcl.ComCtrls;
 
 type
   TMainForm = class(TForm)
@@ -28,14 +28,10 @@ type
     btnSaveFile: TButton;
     btnLoadFile: TButton;
     lvTable: TListView;
-    OpenTxtDlg: TOpenTextFileDialog;
     procedure btnLoadFileClick(Sender: TObject);
     procedure FillListView(line: string);
     function OpenFolderAndSelectFile(const FileName: string): boolean;
     procedure btnSaveClick(Sender: TObject);
-    procedure lvTableSelectItem(Sender: TObject; Item: TListItem;
-      Selected: Boolean);
-    procedure OpenApplicationFileFolder(FullPath: String);
 
   private
 
@@ -56,42 +52,34 @@ var
   stream : TFileStream;
   txt: TextFile;
   fileLocation, line : string;
-  Encoding : TEncoding;
-  EncIndex : Integer;
   LLineText: TArray<string>;
 begin
-  if OpenTxtDlg.Execute(Self.Handle) then
-  begin
-    fileLocation := OpenTxtDlg.FileName;
-    EncIndex := OpenTxtDlg.EncodingIndex;
-    Encoding := OpenTxtDlg.Encodings.Objects[EncIndex] as TEncoding;
+  OpenFolderAndSelectFile(fileLocation);
+  stream := TFileStream.Create(fileLocation, fmOpenRead or fmShareDenyNone);
+  reader := TStreamReader.Create(stream);
+  try
+    reader := TStreamReader.Create(stream, TEncoding.Default);
+    while not reader.EndOfStream do
+    begin
+      LLineText := reader.ReadLine.Split([' ']);
 
-    if FileExists(fileLocation) then
-    begin
-      //OpenApplicationFileFolder(fileLocation);
-      stream := TFileStream.Create(fileLocation, fmOpenRead or fmShareDenyNone);
-      reader := TStreamReader.Create(stream);
-      try
-        reader := TStreamReader.Create(stream, TEncoding.Default);
-        while not reader.EndOfStream do
-        begin
-          FillListView(reader.ReadLine);
-        end;
-        reader.Free;
-      finally
-        stream.Free;
-      end;
-    end
-    else
-    begin
-      raise Exception.Create('File does not exist.');
     end;
+    reader.Free;
+  finally
+    stream.Free;
   end;
+//  OpenFolderAndSelectFile(fileLocation);
+//  AssignFile(txt, fileLocation);
+//  Reset(txt);
+//  while not Eof(txt) do
+//  begin
+//    ReadLn(txt, );
+//  end;
 end;
 
 procedure TMainForm.btnSaveClick(Sender: TObject);
 begin
-  if (edtFirstName.Text = '') or (edtLastName.Text = '') then
+  if edtFirstName.Text = ''  edtLastName = '' then
     raise Exception.Create('First and Last name must not be empty!');
   FillListView(edtFirstName.Text
                 + ' ' + edtLastName.Text
@@ -113,21 +101,6 @@ begin
   end;
 end;
 
-procedure TMainForm.lvTableSelectItem(Sender: TObject; Item: TListItem;
-  Selected: Boolean);
-begin
-  if Item.Selected then
-  begin
-    btnDelete.Enabled := true;
-    btnUpdate.Enabled := true;
-  end
-  else
-  begin
-    btnDelete.Enabled := false;
-    btnUpdate.Enabled := false;
-  end;
-end;
-
 function TMainForm.OpenFolderAndSelectFile(const FileName: string): boolean;
 var
   IIDL: PItemIDList;
@@ -142,9 +115,6 @@ begin
     end;
 end;
 
-procedure TMainForm.OpenApplicationFileFolder(FullPath: String);
-begin
-     ShellExecute(Application.Handle, PChar('open'), PChar(FullPath), nil, nil, SW_SHOWNORMAL);
-end;
+
 
 end.

@@ -2,16 +2,13 @@ program Main;
 
 uses
   Vcl.Forms,
-  TestTask in 'TestTask.pas' {Form1},
-  Vcl.Themes,
-  Vcl.Styles;
+  TestTask in 'TestTask.pas' {Form1};
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
-  TStyleManager.TrySetStyle('Sky');
-  Application.CreateForm(TMainForm, MainForm);
+  Application.CreateForm(TForm1, Form1);
   Application.Run;
 end.

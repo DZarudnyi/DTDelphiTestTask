@@ -60,6 +60,7 @@ var
   EncIndex : Integer;
   LLineText: TArray<string>;
 begin
+  //ShellExecute(0, nil, 'explorer.exe', '/select,C:\WINDOWS\explorer.exe', nil, SW_SHOWNORMAL);
   if OpenTxtDlg.Execute(Self.Handle) then
   begin
     fileLocation := OpenTxtDlg.FileName;
@@ -145,6 +146,9 @@ end;
 procedure TMainForm.OpenApplicationFileFolder(FullPath: String);
 begin
      ShellExecute(Application.Handle, PChar('open'), PChar(FullPath), nil, nil, SW_SHOWNORMAL);
+     //references
+     //https://learn.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shellexecutea
+     //https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-showwindow
 end;
 
 end.
