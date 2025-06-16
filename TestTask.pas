@@ -20,7 +20,7 @@ type
     lblEmail: TLabel;
     edtEmail: TEdit;
     btnSave: TButton;
-    Panel1: TPanel;
+    pContacts: TPanel;
     gbBottom: TGroupBox;
     btnSaveFile: TButton;
     btnLoadFile: TButton;
@@ -30,11 +30,9 @@ type
     mEdPhoneNumber: TMaskEdit;
     procedure btnLoadFileClick(Sender: TObject);
     procedure FillListView(line: string);
-    function OpenFolderAndSelectFile(const FileName: string): boolean;
     procedure btnSaveClick(Sender: TObject);
     procedure lvTableSelectItem(Sender: TObject; Item: TListItem;
       Selected: Boolean);
-    procedure OpenApplicationFileFolder(FullPath: String);
     procedure btnDeleteClick(Sender: TObject);
     procedure btnSaveFileClick(Sender: TObject);
 
@@ -60,11 +58,9 @@ procedure TMainForm.btnLoadFileClick(Sender: TObject);
 var
   reader : TStreamReader;
   stream : TFileStream;
-  txt: TextFile;
   fileLocation, line : string;
   Encoding : TEncoding;
   EncIndex : Integer;
-  LLineText: TArray<string>;
 begin
   if OpenTxtDlg.Execute(Self.Handle) then
   begin
@@ -74,7 +70,6 @@ begin
 
     if FileExists(fileLocation) then
     begin
-      //OpenApplicationFileFolder(fileLocation);
       stream := TFileStream.Create(fileLocation, fmOpenRead or fmShareDenyNone);
       reader := TStreamReader.Create(stream);
       try
@@ -132,6 +127,7 @@ begin
       end;
     end;
   finally
+    output.Close;
     output.Free;
   end;
 end;
@@ -175,25 +171,6 @@ begin
     mEdPhoneNumber.Clear;
     edtEmail.Clear;
   end;
-end;
-
-function TMainForm.OpenFolderAndSelectFile(const FileName: string): boolean;
-var
-  IIDL: PItemIDList;
-begin
-  result := false;
-  IIDL := ILCreateFromPath(PChar(FileName));
-  if IIDL <> nil then
-    try
-      result := SHOpenFolderAndSelectItems(IIDL, 0, nil, 0) = S_OK;
-    finally
-      ILFree(IIDL);
-    end;
-end;
-
-procedure TMainForm.OpenApplicationFileFolder(FullPath: String);
-begin
-     ShellExecute(Application.Handle, PChar('open'), PChar(FullPath), nil, nil, SW_SHOWNORMAL);
 end;
 
 end.

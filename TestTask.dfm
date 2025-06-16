@@ -131,7 +131,7 @@ object MainForm: TMainForm
         OnClick = btnLoadFileClick
       end
     end
-    object Panel1: TPanel
+    object pContacts: TPanel
       Left = 1
       Top = 1
       Width = 463
